@@ -49,9 +49,13 @@ def model(model_type,y_train,y_test,X_train,X_test):
     print("\nOn Test Data:")
     evaluate_print(clf_name, y_test, y_test_scores)
 
-def main(input_file,label_col):
-    print ("<<<<<< preprocess data")
-    df = preprocess.main(input_file)
+def main(input_file,input_folder, label_col):
+    if input_file!='':
+        print ("<<<<<< preprocess data file")
+        df = preprocess.main(input_file)
+    if input_folder!='':
+        print ("<<<<<< preprocess data folder")
+        df = preprocess.process_file_list(input_folder)
     print ("<<<<< data split")
     y_train,y_test,X_train,X_test = split_data(df,label_col)
     print ("<<<<< models KNN")
@@ -63,5 +67,6 @@ def main(input_file,label_col):
 if __name__ == "__main__":
     input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
     #数据预处理
-    main(input_file,'Quality_modify')
+    input_foler = '/Users/liujunyi/Documents/zhongji/qingdao/data'
+    main('',input_foler,'Quality_modify')
 

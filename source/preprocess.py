@@ -6,6 +6,7 @@
 
 import pandas as pd
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 def corr(input1, label):
@@ -36,11 +37,19 @@ def corr(input1, label):
 def main(input_file):
     """Preprocess module for combine records for same machine"""
     #read data
-    df = pd.read_excel(input_file)
-    #key data
-    key_df = df.iloc[1:2,:]
-    #data content
-    df_m = df.iloc[2:,1:]
+    kind = input_file.split('.')[-1]
+    print ("<<<<< input file ", input_file)
+    print ("<<<< file name type: ", kind)
+    if kind == 'excel':
+        df = pd.read_excel(input_file)
+        #key data
+        key_df = df.iloc[1:2,:]
+        #data content
+        df_m = df.iloc[2:,1:]
+    if kind == 'csv':
+        df = pd.read_csv(input_file,encoding='gbk')
+        df_m = df.iloc[:,:]
+
     #process parent ID
     df_m['ParentID'] = df_m['FM1_GunType'].apply(lambda x: '-'.join(x.split('-')[:-1]))
     #combine result for same process
@@ -93,9 +102,25 @@ def main(input_file):
     input1 = input1.fillna(0)
     return input1
 
+def process_file_list(folder):
+    files = os.listdir(folder)
+    ls = []
+    for i in files:
+        df = main(os.path.join(folder,i))
+        ls.append(df)
+    print (ls)
+    df = ls[0]
+    for i in range(1,len(ls)):
+        df = df.append(ls[i])
+    print ("<<<<<< df shape", df.shape)
+    print (df.head())
+    return df
+
 if __name__ == "__main__":
-    input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
+    #input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
     #数据预处理
-    df = main(input_file)
+    #df = main(input_file)
     #相关性矩阵
-    corr(df, 'Quality_modify')
+    #corr(df, 'Quality_modify')
+    input_folder = '/Users/liujunyi/Documents/zhongji/qingdao/data'
+    process_file_list(input_folder)
