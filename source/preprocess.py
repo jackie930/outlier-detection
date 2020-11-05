@@ -40,10 +40,11 @@ def main(input_file):
     kind = input_file.split('.')[-1]
     print ("<<<<< input file ", input_file)
     print ("<<<< file name type: ", kind)
-    if kind == 'excel':
+    if kind == 'xlsx':
         df = pd.read_excel(input_file)
         #key data
         key_df = df.iloc[1:2,:]
+        key_df.to_csv('./key.csv')
         #data content
         df_m = df.iloc[2:,1:]
     if kind == 'csv':
@@ -114,13 +115,15 @@ def process_file_list(folder):
         df = df.append(ls[i])
     print ("<<<<<< df shape", df.shape)
     print (df.head())
+    #save file
+    df.to_excel('res.xlsx',encoding='utf-8')
     return df
 
 if __name__ == "__main__":
-    #input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
+    input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
     #数据预处理
-    #df = main(input_file)
+    df = main(input_file)
     #相关性矩阵
     #corr(df, 'Quality_modify')
-    input_folder = '/Users/liujunyi/Documents/zhongji/qingdao/data'
-    process_file_list(input_folder)
+    #input_folder = '../data'
+    #process_file_list(input_folder)

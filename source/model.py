@@ -11,6 +11,7 @@ from pyod.utils.data import evaluate_print
 from pyod.utils.example import visualize
 from pyod.models.xgbod import XGBOD
 import preprocess
+import pickle
 
 
 def split_data(input1,label_col):
@@ -25,15 +26,19 @@ def split_data(input1,label_col):
     X_test = X_test.astype('int')
     return y_train,y_test,X_train,X_test
 
-def model(model_type,y_train,y_test,X_train,X_test):
+def model(model_type,y_train,y_test,X_train,X_test,model_file):
     if model_type=='KNN':
         clf_name = 'KNN'
         clf = KNN()
         clf.fit(X_train)
+        #save model file
+        pickle.dump(clf, open(model_file, "wb"))
     if model_type=='XGBOD':
         clf_name = 'XGBOD'
         clf = XGBOD(random_state=42)
         clf.fit(X_train, y_train)
+        # save model to file
+        pickle.dump(clf, open(model_file, "wb"))
 
     # get the prediction labels and outlier scores of the training data
     y_train_pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
@@ -49,24 +54,22 @@ def model(model_type,y_train,y_test,X_train,X_test):
     print("\nOn Test Data:")
     evaluate_print(clf_name, y_test, y_test_scores)
 
-def main(input_file,input_folder, label_col):
-    if input_file!='':
-        print ("<<<<<< preprocess data file")
-        df = preprocess.main(input_file)
-    if input_folder!='':
-        print ("<<<<<< preprocess data folder")
-        df = preprocess.process_file_list(input_folder)
+    return model_file
+
+def main(input_file,label_col,model_file):
+    print ("<<<<<< preprocess data")
+    df = preprocess.main(input_file)
     print ("<<<<< data split")
     y_train,y_test,X_train,X_test = split_data(df,label_col)
     print ("<<<<< models KNN")
-    model("KNN",y_train,y_test,X_train,X_test)
+    model("KNN",y_train,y_test,X_train,X_test,model_file)
     print ("<<<<< models xgbod")
-    model("XGBOD",y_train,y_test,X_train,X_test)
-
+    model("XGBOD",y_train,y_test,X_train,X_test,model_file)
 
 if __name__ == "__main__":
     input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
+    folder = ''
+    model_file='./anno.model'
     #数据预处理
-    input_foler = '/Users/liujunyi/Documents/zhongji/qingdao/data'
-    main('',input_foler,'Quality_modify')
+    main(input_file,'Quality_modify',model_file)
 
