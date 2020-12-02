@@ -12,7 +12,7 @@ ENV PYTHONDONTWRITEBYTECODE=TRUE
 ENV PATH="/opt/program:${PATH}"
 
 ##########################################################################################
-# SageMaker requirements
+# SageMaker requirements.txt
 ##########################################################################################
 ## install flask
 RUN pip install networkx==2.3 flask gevent gunicorn pandas pyod xgboost -i https://opentuna.cn/pypi/web/simple

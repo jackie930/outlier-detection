@@ -53,6 +53,10 @@ def main(input_file):
 
     #process parent ID
     df_m['ParentID'] = df_m['FM1_GunType'].apply(lambda x: '-'.join(x.split('-')[:-1]))
+    df_m['process_number'] = df_m['FM1_GunType'].apply(lambda x: x.split('-')[-1])
+    df_m = df_m[df_m['process_number']=='0']
+    print (df_m.head())
+
     #combine result for same process
     df_m['Quality'] = df_m['Quality'].fillna(0)
     df_m['Quality_modify'] = df_m['Quality'].apply(lambda x: 1 if x=='Bad' else 0)
@@ -70,6 +74,7 @@ def main(input_file):
 
 
     #aggregate
+    '''
     input1 = df_m.groupby('ParentID').agg({'Quality_modify':np.sum,
                                            'FM1_ISOCansTemperature':np.mean,
                                            'FM1_ISOOutletPressure':np.mean,
@@ -93,6 +98,32 @@ def main(input_file):
                                            'FoamingPlatformSetDwellTime':np.mean,
                                            'FoamingPlatformTemperature_BackWater':np.mean,
                                            'FoamingPlatformWestCurrentHeight':np.mean}).reset_index()
+    '''
+
+    #non-aggregate
+    input1 = df_m[['Quality_modify',
+                   'FM1_ISOCansTemperature',
+                   'FM1_ISOOutletPressure',
+                   'FM1_POLOutletPressure',
+                   'FM1_POLCansTemperature',
+                   'FM1_GunTemperaturePOL',
+                   'FM1_GunCurrentAmountOfMaterial',
+                   'FM1_GunTemperatureISO',
+                   'FM2_ISOCansTemperature',
+                   'FM2_ISOFlowRate',
+                   'FM2_ISOOutletPressure',
+                   'FM2_POLOutletPressure',
+                   'FM2_POLFlowRate',
+                   'FM2_GunTemperaturePOL',
+                   'FM2_GunCurrentAmountOfMaterial',
+                   'FM2_GunTemperatureISO',
+                   'EM_Temperature',
+                   'EM_Humidity',
+                   'FoamingPlatformEastCurrentHeight',
+                   'FoamingPlatformNewTemperatureProbe_InWater',
+                   'FoamingPlatformSetDwellTime',
+                   'FoamingPlatformTemperature_BackWater',
+                   'FoamingPlatformWestCurrentHeight']]
 
     for i in error_list:
         try:
@@ -120,10 +151,10 @@ def process_file_list(folder):
     return df
 
 if __name__ == "__main__":
-    input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
+    #input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
     #数据预处理
-    df = main(input_file)
+    #df = main(input_file)
     #相关性矩阵
     #corr(df, 'Quality_modify')
-    #input_folder = '../data'
-    #process_file_list(input_folder)
+    input_folder = '/Users/liujunyi/Desktop/zj/data'
+    process_file_list(input_folder)

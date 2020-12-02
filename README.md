@@ -2,7 +2,11 @@
 
 ## Quick start
 
+
 ``` sh
+#prepare environment
+pip install -r requirements.txt -i https://opentuna.cn/pypi/web/simple
+
 #模型训练
 cd source
 python model.py
