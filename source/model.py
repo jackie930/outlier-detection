@@ -14,6 +14,7 @@ from pyod.models.sod import SOD
 import preprocess
 import pickle
 from pyod.models.vae import VAE
+import joblib
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
 
@@ -89,8 +90,11 @@ def main(input_file,file_type, label_col,model_file):
     y_train,y_test,X_train,X_test = split_data(df,label_col)
     #data normalization
     mm = MinMaxScaler()
-    X_train_std = mm.fit_transform(X_train)
-    X_test_std = mm.fit_transform(X_test)
+    mm.fit(X_train)
+    joblib.dump(mm, './scaler.gz')
+
+    X_train_std = mm.transform(X_train)
+    X_test_std = mm.transform(X_test)
 
     for model_name in ['KNN','XGBOD','SOD']:
         print ("<<<<< model: ", model_name)

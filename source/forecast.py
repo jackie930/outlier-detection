@@ -7,6 +7,7 @@ import preprocess
 import os
 import pickle
 import numpy as np
+import joblib
 
 class ScoringService(object):
     model = None  # Where we keep the model when it's loaded
@@ -35,8 +36,11 @@ def infer_anomaly_model(clf, infer_data):
 
     X_test = np.array(df.iloc[:,1:])
     X_test = X_test.astype('int')
+    #normalize
+    my_scaler = joblib.load('./scaler.gz')
+    X_test_std = my_scaler.transform(X_test)
 
-    y_test_pred = clf.predict(X_test)
+    y_test_pred = clf.predict(X_test_std)
     print (y_test_pred)
     return y_test_pred
 
