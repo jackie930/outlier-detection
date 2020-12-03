@@ -15,8 +15,8 @@ import preprocess
 import pickle
 from pyod.models.vae import VAE
 import joblib
-from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import confusion_matrix
 
 
 def split_data(input1,label_col):
@@ -70,8 +70,14 @@ def model_test(model_type,y_train,y_test,X_train,X_test,model_file,save_flag):
     # evaluate and print the results
     print("\nOn Training Data:")
     evaluate_print(clf_name, y_train, y_train_scores)
+    conf_train = confusion_matrix(y_train, y_train_pred)
+    print ("<<<< confusion matrix for train: ", conf_train)
+
     print("\nOn Test Data:")
     evaluate_print(clf_name, y_test, y_test_scores)
+    conf_test = confusion_matrix(y_test, y_test_pred)
+    print ("<<<< confusion matrix for test: ", conf_test)
+
     # visualize the results
     #todo： Input data has to be 2-d for visualization.
     #visualize(clf_name, X_train, y_train, X_test, y_test, y_train_pred,
@@ -96,7 +102,7 @@ def main(input_file,file_type, label_col,model_file):
     X_train_std = mm.transform(X_train)
     X_test_std = mm.transform(X_test)
 
-    for model_name in ['KNN','XGBOD','SOD']:
+    for model_name in ['KNN']:
         print ("<<<<< model: ", model_name)
         model_test(model_name,y_train,y_test,X_train_std,X_test_std,model_file,'0')
 

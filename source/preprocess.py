@@ -64,41 +64,17 @@ def main(input_file):
     #process dtypes
     error_list = []
     for i in df_m.columns:
-        #print (i)
-        try:
-            df_m[i]=df_m[i].astype("float")
-        except:
-            print ("error for: ", i)
-            error_list.append(i)
+        (filename, extension) = os.path.splitext(i)
+        if extension in ['xlsx','csv']:
+            #print (i)
+            try:
+                df_m[i]=df_m[i].astype("float")
+            except:
+                print ("error for: ", i)
+                error_list.append(i)
+                continue
+        else:
             continue
-
-
-    #aggregate
-    '''
-    input1 = df_m.groupby('ParentID').agg({'Quality_modify':np.sum,
-                                           'FM1_ISOCansTemperature':np.mean,
-                                           'FM1_ISOOutletPressure':np.mean,
-                                           'FM1_POLOutletPressure':np.mean,
-                                           'FM1_POLCansTemperature':np.mean,
-                                           'FM1_GunTemperaturePOL':np.mean,
-                                           'FM1_GunCurrentAmountOfMaterial':np.mean,
-                                           'FM1_GunTemperatureISO':np.mean,
-                                           'FM2_ISOCansTemperature':np.mean,
-                                           'FM2_ISOFlowRate':np.mean,
-                                           'FM2_ISOOutletPressure':np.mean,
-                                           'FM2_POLOutletPressure':np.mean,
-                                           'FM2_POLFlowRate':np.mean,
-                                           'FM2_GunTemperaturePOL':np.mean,
-                                           'FM2_GunCurrentAmountOfMaterial':np.mean,
-                                           'FM2_GunTemperatureISO':np.mean,
-                                           'EM_Temperature':np.mean,
-                                           'EM_Humidity':np.mean,
-                                           'FoamingPlatformEastCurrentHeight':np.mean,
-                                           'FoamingPlatformNewTemperatureProbe_InWater':np.mean,
-                                           'FoamingPlatformSetDwellTime':np.mean,
-                                           'FoamingPlatformTemperature_BackWater':np.mean,
-                                           'FoamingPlatformWestCurrentHeight':np.mean}).reset_index()
-    '''
 
     #non-aggregate
     input1 = df_m[['Quality_modify',
