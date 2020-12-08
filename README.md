@@ -3,8 +3,9 @@
 ## Quick start
 
 ### features
-- 使用SMOTE进行采样
-- 使用损失函数调整
+- 使用SMOTE进行采样 [todo]
+- 使用参数控制过拟合
+
 
 ``` sh
 #prepare environment

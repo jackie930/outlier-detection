@@ -38,6 +38,7 @@ def model_test(model_type,y_train,y_test,X_train,X_test,model_file,save_flag):
         clf.fit(X_train)
     if model_type=='XGBOD':
         clf_name = 'XGBOD'
+        #set this scale_pos_weight  sum(negative instances) / sum(positive instances).
         clf = XGBOD(random_state=42,scale_pos_weight=50)
         clf.fit(X_train, y_train)
     if model_type=='SOD':

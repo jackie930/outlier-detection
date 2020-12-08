@@ -5,3 +5,4 @@ sklearn
 pyod
 xgboost
 tensorflow
+imbalanced-learn
