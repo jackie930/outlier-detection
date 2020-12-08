@@ -38,7 +38,7 @@ def model_test(model_type,y_train,y_test,X_train,X_test,model_file,save_flag):
         clf.fit(X_train)
     if model_type=='XGBOD':
         clf_name = 'XGBOD'
-        clf = XGBOD(random_state=42)
+        clf = XGBOD(random_state=42,scale_pos_weight=50)
         clf.fit(X_train, y_train)
     if model_type=='SOD':
         # train SOD detector
@@ -102,16 +102,19 @@ def main(input_file,file_type, label_col,model_file):
     X_train_std = mm.transform(X_train)
     X_test_std = mm.transform(X_test)
 
-    for model_name in ['KNN']:
+    for model_name in ['KNN','XGBOD']:
         print ("<<<<< model: ", model_name)
         model_test(model_name,y_train,y_test,X_train_std,X_test_std,model_file,'0')
 
 if __name__ == "__main__":
-    input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
+    #input_file= '~/Documents/zhongji/qingdao/data_IOT.xlsx'
     folder = ''
     model_file='./anno.model'
     #数据预处理
     input_folder = '../data'
     file_type = 'folder'
-    main(input_folder,file_type,'Quality_modify',model_file)
+    main(input_folder,file_type,'Quality_res',model_file)
+
+
+
 
